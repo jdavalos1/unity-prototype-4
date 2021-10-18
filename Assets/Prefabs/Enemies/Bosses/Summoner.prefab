@@ -128,6 +128,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 10
   rbEnemy: {fileID: 0}
+  pointsWorth: 8
 --- !u!114 &8753494930603659091
 MonoBehaviour:
   m_ObjectHideFlags: 0

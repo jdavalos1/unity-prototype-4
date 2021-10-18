@@ -7,11 +7,14 @@ public class PlayerController : MonoBehaviour
     // Player stats
     public float speed = 5.0f;
 
-    // Game objects for powerups
+    // Managers
     public GameObject powerupIndicatorManager;
+    private PowerupManager powerupManager;
+    private GameManager gameManager;
+
+    // Game objects for powerups
     public GameObject homingRocket;
     private GameObject tempRocket;
-    private PowerupManager powerupManager;
 
     // Pound Powerup stats
     private float poundPowerupStrength = 20.0f;
@@ -31,6 +34,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         powerupManager = powerupIndicatorManager.GetComponent<PowerupManager>();
+        gameManager = FindObjectOfType<GameManager>();
         playerRb = GetComponent<Rigidbody>();
         focalPoint = GameObject.Find("Focal Point");
     }
@@ -38,8 +42,21 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        HandleMovement();
-        HandlePowerupTrigger();
+        CheckPosition();
+        if (gameManager.isGameActive)
+        {
+            HandleEscape();
+            HandleMovement();
+            HandlePowerupTrigger();
+        }
+    }
+
+    void HandleEscape()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            gameManager.HandlePause();
+        }
     }
 
     // Handle vertical movement
@@ -125,6 +142,15 @@ public class PlayerController : MonoBehaviour
 
                 enemy.rbEnemy.AddForce(Vector3.back * maxPoundDistance, ForceMode.Impulse);
             }
+        }
+    }
+
+    void CheckPosition()
+    {
+        if(transform.position.y < -10)
+        {
+            gameManager.EndGame();
+            Destroy(gameObject);
         }
     }
 }

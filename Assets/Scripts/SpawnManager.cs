@@ -2,33 +2,41 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
+    // Prefabs for the enemies
     public GameObject[] enemyPrefabs;
     public GameObject[] bossPrefabs;
     public GameObject[] powerupPrefabs;
     public GameObject enemyRocketPrefab;
-    private float spawnRange = 9;
-    public int enemyCount;
-    public int waveNumber = 1;
 
+    // Range for enemies to spawn
+    private float spawnRange = 9;
+    
+    // Spawn stats
+    public int enemyCount;
+    public int waveNumber = 0;
+
+    // How many until a boss wave?
     private int bossWaveInterval = 3;
+
+    private GameManager gameManager;
 
     // Start is called before the first frame update
     void Start()
     {
-        Instantiate(enemyPrefabs[0], GenerateSpawnPosition(), enemyPrefabs[0].transform.rotation);
-        Instantiate(powerupPrefabs[0], GenerateSpawnPosition(), powerupPrefabs[0].transform.rotation);
+        gameManager = FindObjectOfType<GameManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
         enemyCount = GameObject.FindGameObjectsWithTag("Enemy").Length;
-        if (enemyCount == 0)
+        if (enemyCount == 0 && gameManager.isGameActive)
         {
             int randPowerup = Random.Range(0, powerupPrefabs.Length);
             Instantiate(powerupPrefabs[randPowerup], powerupPrefabs[randPowerup].transform.position, powerupPrefabs[randPowerup].transform.rotation);
 
             waveNumber++;
+            gameManager.UpdateRound(waveNumber);
             // If the interval has passed summon boss ow summon spawns
             if (waveNumber % bossWaveInterval == 0)
             {
@@ -67,5 +75,4 @@ public class SpawnManager : MonoBehaviour
 
         Instantiate(bossPrefabs[randBoss], GenerateSpawnPosition(), bossPrefabs[randBoss].transform.rotation);
     }
-
 }

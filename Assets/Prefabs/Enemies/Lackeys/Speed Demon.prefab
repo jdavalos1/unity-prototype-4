@@ -126,3 +126,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 7
+  rbEnemy: {fileID: 0}
+  pointsWorth: 4
